@@ -1,19 +1,25 @@
 import xbmc
 import xbmcgui
 import sickbeard
+import sys
+
+count = len(sys.argv) - 1
 
 # Initialize Sickbeard Class
 Sickbeard = sickbeard.SB()
 
 def showSearchDialog():
   # Get search text from user
-  keyboard = xbmc.Keyboard('', 'Find a show on the TVDB', False)
-  keyboard.doModal()
-  if (keyboard.isConfirmed()):
-    text = keyboard.getText() 
-  return text  
-  
-# Add show main function. Shows the initial search window. 
+  if count > 0:
+    text = sys.argv[1]
+    return text
+  else:
+    keyboard = xbmc.Keyboard('', 'Find a show on the TVDB', False)
+    keyboard.doModal()
+    if (keyboard.isConfirmed()):
+      text = keyboard.getText()
+    return text
+  # Add show main function. Shows the initial search window.
 def AddShow():
   text = showSearchDialog()
   # Search for the show using SB search API  
@@ -27,18 +33,18 @@ def AddShow():
   root_dir = SelectRootDirMessage()
   # 2. sb.getdefaults for status of show eps.  Need to make each option selectable so you can change initial status, folders, quality.
   default_status, default_folders, default_quality = Sickbeard.GetDefaults()
-  
+
   initial_status = SetInitialStatusMessage(default_status)
   use_season_folders = SetSeasonFolderMessage(default_folders)
   quality = SetQualityMessage(default_quality)
-  
+
   tvdbid = search_results[selected_show]['tvdbid']
   ret = Sickbeard.AddNewShow(tvdbid, root_dir, initial_status, use_season_folders, quality)
   if ret == "success":
     ShowMessage("Add Show", "Successfully added "+search_results[selected_show]['name'])
   else:
     ShowMessage("Add Show", "Failed to add "+search_results[selected_show]['name'])
-    
+
 # Search results selection window
 def ShowSelectMessage(shows):
   formatted_shows = []
@@ -70,7 +76,7 @@ def SelectRootDirMessage():
   dialog = xbmcgui.Dialog()
   ret = dialog.select("Pick the parent folder", directories)
   ret = directories[ret]
-  return ret   
+  return ret
 
 # Set initial status of show eps window
 def SetInitialStatusMessage(status):
