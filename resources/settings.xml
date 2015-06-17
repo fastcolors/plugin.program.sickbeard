@@ -11,5 +11,6 @@
 <category label="Login">
 <setting id="Sickbeard Username" type="text" label="Sickbeard Username" default="" />
 <setting id="Sickbeard Password" type="text" label="Sickbeard Password" default="" />
+<setting id="API Key" type="text" label="API Key" default="" />
 </category>
 </settings>
